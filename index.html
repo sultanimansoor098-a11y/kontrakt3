@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avtal Betting med Skicka till e-post</title>
+<style>
+  body { font-family: Arial, sans-serif; background:#f6f8fb; margin:0; padding:20px; }
+  .container { max-width:900px; margin:auto; background:#fff; padding:20px; border-radius:12px; box-shadow:0 6px 24px rgba(0,0,0,0.1); }
+  h1 { text-align:center; }
+  label { display:block; margin-top:10px; font-weight:bold; }
+  input, textarea, select { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:5px; }
+  button { margin-top:15px; padding:10px 15px; border:none; border-radius:5px; cursor:pointer; background:#0b66ff; color:white; width:100%; font-size:16px; }
+  button.secondary { background:#e6eefc; color:#0b66ff; }
+  .flex { display:flex; gap:10px; }
+  .col { flex:1; }
+  .preview { margin-top:20px; background:#fbfdff; padding:16px; border-radius:8px; border:1px solid #eef3ff; white-space:pre-wrap; font-family:inherit; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Avtal Betting</h1>
+  <p class="lead">Denna mall används för att reglera samarbetet mellan två parter som utbyter råd, analyser eller vinstdelning i samband med betting där varje part spelar via sina egna spelkonton. Mallen är avsedd som ett privat avtal och ersätter inte juridisk rådgivning.</p>
+
+  <form id="form">
+    <div class="flex">
+      <div class="col">
+        <h3>Part A (rådgivare)</h3>
+        <label>Fullständigt namn</label>
+        <input type="text" id="nameA" placeholder="För- och efternamn" required>
+        <label>Telefonnummer</label>
+        <input type="tel" id="phoneA" placeholder="+46701234567" required>
+        <label>Standardbelopp (SEK)</label>
+        <input type="number" id="amountA" min="0">
+      </div>
+      <div class="col">
+        <h3>Part B (spelare)</h3>
+        <label>Fullständigt namn</label>
+        <input type="text" id="nameB" placeholder="För- och efternamn" required>
+        <label>Telefonnummer</label>
+        <input type="tel" id="phoneB" placeholder="+46707654321" required>
+        <label>Standardbelopp (SEK)</label>
+        <input type="number" id="amountB" min="0">
+      </div>
+    </div>
+
+    <label>Övriga villkor</label>
+    <textarea id="extra" placeholder="Ex: Max 1000 SEK per vecka"></textarea>
+
+    <div class="flex">
+      <button type="button" onclick="generate()">Visa avtalet</button>
+      <button type="button" class="secondary" onclick="sendForm()">Skicka till mig</button>
+    </div>
+  </form>
+
+  <div id="preview" class="preview" style="display:none;"></div>
+</div>
+
+<script>
+function generate() {
+  const nameA = document.getElementById('nameA').value.trim();
+  const phoneA = document.getElementById('phoneA').value.trim();
+  const amountA = document.getElementById('amountA').value.trim() || '0';
+  const nameB = document.getElementById('nameB').value.trim();
+  const phoneB = document.getElementById('phoneB').value.trim();
+  const amountB = document.getElementById('amountB').value.trim() || '0';
+  const extra = document.getElementById('extra').value.trim() || '-';
+
+  if(!nameA || !phoneA || !nameB || !phoneB) {
+    alert('Fyll i namn och telefonnummer för båda parter.');
+    return;
+  }
+
+  const today = new Date().toLocaleDateString('sv-SE');
+
+  const agreement = `
+AVTAL OM SAMARBETE OCH VINSTDELNING
+
+Datum: ${today}
+
+Parter:
+Part A (rådgivare): ${nameA} — Telefon: ${phoneA} — Standardbelopp: ${amountA} SEK
+Part B (spelare): ${nameB} — Telefon: ${phoneB} — Standardbelopp: ${amountB} SEK
+
+1. Avtalets syfte
+Part A tillhandahåller rådgivning, strategier och analyser avseende betting. Part B spelar med sitt konto men följer råd från Part A. Alla pengar som finns på kontot tillhör Part A, men en överenskommen del av vinsten betalas till Part B enligt nedan.
+
+2. Ansvarsplacering
+Part B ansvarar för att följa regler hos spelbolaget. Part A ansvarar inte för förluster som uppstår på grund av Part B:s beslut. Inga inloggningsuppgifter delas med andra, för att följa spelbolagens villkor.
+
+3. Vinstdelning
+Nettovinster som genereras på kontot fördelas enligt standardbelopp:
+- Part A: ${amountA} SEK
+- Part B: ${amountB} SEK
+
+4. Redovisning
+Part B ska kunna vid behov visa transaktioner och vinster till Part A för verifiering av utbetalning.
+
+5. Sekretess
+Parterna förbinder sig att inte sprida konfidentiell information om varandras konton eller strategier.
+
+6. Uppsägning
+Avtalet gäller tills vidare och kan sägas upp av endera parten med 14 dagars skriftligt meddelande.
+
+7. Lagval och tvister
+Svensk lag gäller. Tvist ska i första hand lösas genom förhandling.
+
+8. Övriga villkor
+${extra}
+
+Genom att fylla i namn och telefonnummer bekräftar parterna att de har läst, förstått och accepterar villkoren.
+`;
+
+  const preview = document.getElementById('preview');
+  preview.style.display = 'block';
+  preview.textContent = agreement;
+}
+
+function sendForm() {
+  const nameA = encodeURIComponent(document.getElementById('nameA').value.trim());
+  const phoneA = encodeURIComponent(document.getElementById('phoneA').value.trim());
+  const amountA = encodeURIComponent(document.getElementById('amountA').value.trim() || '0');
+  const nameB = encodeURIComponent(document.getElementById('nameB').value.trim());
+  const phoneB = encodeURIComponent(document.getElementById('phoneB').value.trim());
+  const amountB = encodeURIComponent(document.getElementById('amountB').value.trim() || '0');
+  const extra = encodeURIComponent(document.getElementById('extra').value.trim() || '-');
+
+  const url = "https://formspree.io/f/xgvnjldw";
+
+  const formData = new FormData();
+  formData.append('nameA', nameA);
+  formData.append('phoneA', phoneA);
+  formData.append('amountA', amountA);
+  formData.append('nameB', nameB);
+  formData.append('phoneB', phoneB);
+  formData.append('amountB', amountB);
+  formData.append('extra', extra);
+
+  fetch(url, {
+    method: "POST",
+    body: formData,
+    headers: { 'Accept': 'application/json' }
+  }).then(response => {
+    if(response.ok) {
+      alert('Avtalet skickades till din e-post!');
+    } else {
+      alert('Ett fel uppstod. Prova igen.');
+    }
+  }).catch(err => {
+    alert('Ett fel uppstod: ' + err);
+  });
+}
+</script>
+</body>
+</html>
