@@ -21,7 +21,7 @@
       padding: 25px;
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      max-width: 600px;
+      max-width: 700px;
       width: 90%;
     }
 
@@ -72,6 +72,7 @@
       font-size: 14px;
       line-height: 1.6;
       margin-top: 15px;
+      white-space: pre-line; /* behåller radbrytningar i texten */
     }
 
     @media (max-width: 600px) {
@@ -92,7 +93,7 @@
   <div class="container">
     <h2>Avtal om Bettingbonus</h2>
 
-    <form id="contractForm">
+    <form id="contractForm" action="https://formspree.io/f/xgvnjldw" method="POST">
       <label for="namn">Fullständigt namn:</label>
       <input type="text" id="namn" name="namn" required>
 
@@ -108,14 +109,15 @@
       <div class="agreement">
         <p><strong>Avtalsvillkor:</strong></p>
         <p>
-          Detta avtal gäller mellan ovanstående person och avtalsskaparen. Jag, avtalsskaparen,
-          köper personens bettingbonus och spelar på deras konto. Alla pengar som finns på kontot
-          samt alla vinster tillhör mig. En del av vinsten, enligt ovan angiven procentsats,
-          betalas ut till personen i enlighet med detta avtal.
-        </p>
-        <p>
-          Genom att skicka in detta formulär bekräftar personen att de har läst och godkänner
-          ovanstående villkor.
+Detta avtal har ingåtts mellan två parter, nedan kallade Säljaren och Köparen. Säljaren bekräftar härmed att denne önskar överlåta sitt bonus bettingkonto samt alla tillhörande rättigheter till Köparen. Genom detta avtal godkänner Säljaren att samtliga pengar, vinster, bonusar och övriga tillgångar som finns på säljarens bettingkonto från och med avtalets undertecknande tillhör Köparen tills hela processen är fullständigt slutförd. Under denna period har Säljaren ingen rätt till de medel som finns på kontot och avsäger sig alla ekonomiska anspråk på dessa tills processen är avslutad.
+
+Köparen åtar sig att hantera överlåtelsen på ett korrekt, transparent och ansvarsfullt sätt. Säljaren förbinder sig samtidigt att tillhandahålla den information, de uppgifter och eventuella bekräftelser som krävs för att genomföra överlåtelsen.
+
+Genom att skriva sitt fullständiga namn och telefonnummer samt bekräfta sitt godkännande av villkoren, intygar Säljaren att han eller hon har tagit del av, förstått och accepterat alla punkter i detta avtal. Villkoren gäller i sin helhet tills hela processen är slutförd och båda parter skriftligen bekräftar att överlåtelsen är avslutad.
+
+Avtalet anses giltigt från och med den dag då båda parter har godkänt det, och det upphör att gälla när processen är fullständigt avslutad. Eventuella oenigheter eller missförstånd som uppstår under avtalets giltighetstid ska i första hand lösas genom dialog mellan parterna. Om en överenskommelse inte kan nås, ska ärendet hanteras enligt svensk lag.
+
+Genom att ange sitt namn, telefonnummer och godkännande bekräftar Säljaren att detta avtal är bindande under hela den tid som processen pågår.
         </p>
       </div>
 
@@ -124,34 +126,10 @@
   </div>
 
   <script>
-    document.getElementById("contractForm").addEventListener("submit", async function(event) {
-      event.preventDefault();
-
-      const data = {
-        namn: document.getElementById("namn").value,
-        telefon: document.getElementById("telefon").value,
-        summa: document.getElementById("summa").value,
-        andel: document.getElementById("andel").value,
-        datum: new Date().toLocaleDateString()
-      };
-
-      try {
-        const response = await fetch("https://hook.eu2.make.com/o6loifz6uh0xofs1oy733j1bk5ymd8xi", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-
-        if (response.ok) {
-          alert("Tack! Ditt avtal har skickats och tas emot korrekt.");
-          event.target.reset();
-        } else {
-          alert("Något gick fel vid skickning, försök igen.");
-        }
-      } catch (error) {
-        console.error("Fel:", error);
-        alert("Fel vid anslutning, kontrollera din internetanslutning.");
-      }
+    document.getElementById("contractForm").addEventListener("submit", function(event) {
+      setTimeout(function() {
+        alert("Tack! Ditt avtal har skickats.");
+      }, 100);
     });
   </script>
 
