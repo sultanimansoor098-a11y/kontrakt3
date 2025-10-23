@@ -93,7 +93,7 @@
   <div class="container">
     <h2>Avtal om Bettingbonus</h2>
 
-    <form id="contractForm" action="https://formspree.io/f/xgvnjldw" method="POST">
+    <form id="contractForm">
       <label for="namn">Fullständigt namn:</label>
       <input type="text" id="namn" name="namn" required>
 
@@ -103,7 +103,7 @@
       <label for="summa">Avtalsbelopp (kr):</label>
       <input type="number" id="summa" name="summa" required>
 
-      <label for="andel">Andel av vinst (%):</label>
+      <label for="andel">Andel av vinst (kr):</label>
       <input type="number" id="andel" name="andel" required>
 
       <div class="agreement">
@@ -126,10 +126,34 @@ Genom att ange sitt namn, telefonnummer och godkännande bekräftar Säljaren at
   </div>
 
   <script>
-    document.getElementById("contractForm").addEventListener("submit", function(event) {
-      setTimeout(function() {
-        alert("Tack! Ditt avtal har skickats.");
-      }, 100);
+    document.getElementById("contractForm").addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const data = {
+        namn: document.getElementById("namn").value,
+        telefon: document.getElementById("telefon").value,
+        summa: document.getElementById("summa").value,
+        andel: document.getElementById("andel").value,
+        datum: new Date().toLocaleDateString()
+      };
+
+      try {
+        const response = await fetch("https://hook.eu2.make.com/o6loifz6uh0xofs1oy733j1bk5ymd8xi", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        if(response.ok){
+          alert("Tack! Ditt avtal har skickats.");
+          event.target.reset();
+        } else {
+          alert("Fel vid skickning, försök igen.");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Fel vid anslutning, kontrollera internet.");
+      }
     });
   </script>
 
